@@ -40,21 +40,6 @@ func TestCsiEntryToX(t *testing.T) {
 	stateTransitionHelper(t, CsiEntry, CsiParam, CsiCollectables)
 }
 
-func csiToGroundNoParamHelper(t *testing.T, b byte, funcCall string) {
-	bytes := []byte{b}
-	parser, evtHandler := createTestParser(CsiEntry)
-	parser.Parse(bytes)
-	validateState(t, parser.state, Ground)
-	validateFuncCalls(t, evtHandler.FunctionCalls, []string{funcCall})
-}
-
-func TestCursor(t *testing.T) {
-	csiToGroundNoParamHelper(t, 'A', "CUU")
-	csiToGroundNoParamHelper(t, 'B', "CUD")
-	csiToGroundNoParamHelper(t, 'C', "CUF")
-	csiToGroundNoParamHelper(t, 'D', "CUB")
-}
-
 func TestCollectCsiParams(t *testing.T) {
 	parser, _ := createTestParser(CsiEntry)
 	parser.Parse(CsiParams)
@@ -127,21 +112,25 @@ func funcCallParamHelper(t *testing.T, bytes []byte, expectedState State, expect
 }
 
 func TestCursorParam(t *testing.T) {
+	funcCallParamHelper(t, []byte{'A'}, Ground, []string{"CUU([])"})
 	funcCallParamHelper(t, []byte{'2', 'A'}, Ground, []string{"CUU([2])"})
 	funcCallParamHelper(t, []byte{'2', '3', 'A'}, Ground, []string{"CUU([23])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', 'A'}, Ground, []string{"CUU([2 3])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'A'}, Ground, []string{"CUU([2 3 4])"})
 
+	funcCallParamHelper(t, []byte{'B'}, Ground, []string{"CUD([])"})
 	funcCallParamHelper(t, []byte{'2', 'B'}, Ground, []string{"CUD([2])"})
 	funcCallParamHelper(t, []byte{'2', '3', 'B'}, Ground, []string{"CUD([23])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', 'B'}, Ground, []string{"CUD([2 3])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'B'}, Ground, []string{"CUD([2 3 4])"})
 
+	funcCallParamHelper(t, []byte{'C'}, Ground, []string{"CUF([])"})
 	funcCallParamHelper(t, []byte{'2', 'C'}, Ground, []string{"CUF([2])"})
 	funcCallParamHelper(t, []byte{'2', '3', 'C'}, Ground, []string{"CUF([23])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', 'C'}, Ground, []string{"CUF([2 3])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'C'}, Ground, []string{"CUF([2 3 4])"})
 
+	funcCallParamHelper(t, []byte{'D'}, Ground, []string{"CUB([])"})
 	funcCallParamHelper(t, []byte{'2', 'D'}, Ground, []string{"CUB([2])"})
 	funcCallParamHelper(t, []byte{'2', '3', 'D'}, Ground, []string{"CUB([23])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', 'D'}, Ground, []string{"CUB([2 3])"})

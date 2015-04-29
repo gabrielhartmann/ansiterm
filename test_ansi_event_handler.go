@@ -15,12 +15,7 @@ func CreateTestAnsiEventHandler() TestAnsiEventHandler {
 }
 
 func (h *TestAnsiEventHandler) recordCall(call string, params []int) {
-	s := call
-
-	if len(params) > 0 {
-		s = fmt.Sprintf("%s(%v)", call, params)
-	}
-
+	s := fmt.Sprintf("%s(%v)", call, params)
 	h.FunctionCalls = append(h.FunctionCalls, s)
 }
 
