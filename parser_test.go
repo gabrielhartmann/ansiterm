@@ -1,6 +1,7 @@
 package ansiterm
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -57,58 +58,22 @@ func TestParseParams(t *testing.T) {
 	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0', ';', ';'}, []int{78, 90})
 }
 
+func cursorHelper(t *testing.T, command byte, funcName string) {
+	funcCallParamHelper(t, []byte{command}, Ground, []string{fmt.Sprintf("%s([])", funcName)})
+	funcCallParamHelper(t, []byte{'2', command}, Ground, []string{fmt.Sprintf("%s([2])", funcName)})
+	funcCallParamHelper(t, []byte{'2', '3', command}, Ground, []string{fmt.Sprintf("%s([23])", funcName)})
+	funcCallParamHelper(t, []byte{'2', ';', '3', command}, Ground, []string{fmt.Sprintf("%s([2 3])", funcName)})
+	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', command}, Ground, []string{fmt.Sprintf("%s([2 3 4])", funcName)})
+}
+
 func TestCursor(t *testing.T) {
-	funcCallParamHelper(t, []byte{'A'}, Ground, []string{"CUU([])"})
-	funcCallParamHelper(t, []byte{'2', 'A'}, Ground, []string{"CUU([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'A'}, Ground, []string{"CUU([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'A'}, Ground, []string{"CUU([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'A'}, Ground, []string{"CUU([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'B'}, Ground, []string{"CUD([])"})
-	funcCallParamHelper(t, []byte{'2', 'B'}, Ground, []string{"CUD([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'B'}, Ground, []string{"CUD([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'B'}, Ground, []string{"CUD([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'B'}, Ground, []string{"CUD([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'C'}, Ground, []string{"CUF([])"})
-	funcCallParamHelper(t, []byte{'2', 'C'}, Ground, []string{"CUF([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'C'}, Ground, []string{"CUF([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'C'}, Ground, []string{"CUF([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'C'}, Ground, []string{"CUF([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'D'}, Ground, []string{"CUB([])"})
-	funcCallParamHelper(t, []byte{'2', 'D'}, Ground, []string{"CUB([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'D'}, Ground, []string{"CUB([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'D'}, Ground, []string{"CUB([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'D'}, Ground, []string{"CUB([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'E'}, Ground, []string{"CNL([])"})
-	funcCallParamHelper(t, []byte{'2', 'E'}, Ground, []string{"CNL([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'E'}, Ground, []string{"CNL([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'E'}, Ground, []string{"CNL([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'E'}, Ground, []string{"CNL([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'F'}, Ground, []string{"CPL([])"})
-	funcCallParamHelper(t, []byte{'2', 'F'}, Ground, []string{"CPL([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'F'}, Ground, []string{"CPL([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'F'}, Ground, []string{"CPL([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'F'}, Ground, []string{"CPL([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'G'}, Ground, []string{"CHA([])"})
-	funcCallParamHelper(t, []byte{'2', 'G'}, Ground, []string{"CHA([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'G'}, Ground, []string{"CHA([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'G'}, Ground, []string{"CHA([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'G'}, Ground, []string{"CHA([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'H'}, Ground, []string{"CUP([])"})
-	funcCallParamHelper(t, []byte{'2', 'H'}, Ground, []string{"CUP([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'H'}, Ground, []string{"CUP([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'H'}, Ground, []string{"CUP([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'H'}, Ground, []string{"CUP([2 3 4])"})
-
-	funcCallParamHelper(t, []byte{'f'}, Ground, []string{"HVP([])"})
-	funcCallParamHelper(t, []byte{'2', 'f'}, Ground, []string{"HVP([2])"})
-	funcCallParamHelper(t, []byte{'2', '3', 'f'}, Ground, []string{"HVP([23])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', 'f'}, Ground, []string{"HVP([2 3])"})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'f'}, Ground, []string{"HVP([2 3 4])"})
+	cursorHelper(t, 'A', "CUU")
+	cursorHelper(t, 'B', "CUD")
+	cursorHelper(t, 'C', "CUF")
+	cursorHelper(t, 'D', "CUB")
+	cursorHelper(t, 'E', "CNL")
+	cursorHelper(t, 'F', "CPL")
+	cursorHelper(t, 'G', "CHA")
+	cursorHelper(t, 'H', "CUP")
+	cursorHelper(t, 'f', "HVP")
 }
