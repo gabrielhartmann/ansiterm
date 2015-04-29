@@ -14,52 +14,52 @@ func CreateTestAnsiEventHandler() TestAnsiEventHandler {
 	return evtHandler
 }
 
-func (h *TestAnsiEventHandler) recordCall(call string, params []int) {
+func (h *TestAnsiEventHandler) recordCall(call string, params []string) {
 	s := fmt.Sprintf("%s(%v)", call, params)
 	h.FunctionCalls = append(h.FunctionCalls, s)
 }
 
-func (h *TestAnsiEventHandler) CUU(params []int) error {
+func (h *TestAnsiEventHandler) CUU(params []string) error {
 	h.recordCall("CUU", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUD(params []int) error {
+func (h *TestAnsiEventHandler) CUD(params []string) error {
 	h.recordCall("CUD", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUF(params []int) error {
+func (h *TestAnsiEventHandler) CUF(params []string) error {
 	h.recordCall("CUF", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUB(params []int) error {
+func (h *TestAnsiEventHandler) CUB(params []string) error {
 	h.recordCall("CUB", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CNL(params []int) error {
+func (h *TestAnsiEventHandler) CNL(params []string) error {
 	h.recordCall("CNL", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CPL(params []int) error {
+func (h *TestAnsiEventHandler) CPL(params []string) error {
 	h.recordCall("CPL", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CHA(params []int) error {
+func (h *TestAnsiEventHandler) CHA(params []string) error {
 	h.recordCall("CHA", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUP(params []int) error {
+func (h *TestAnsiEventHandler) CUP(params []string) error {
 	h.recordCall("CUP", params)
 	return nil
 }
 
-func (h *TestAnsiEventHandler) HVP(params []int) error {
+func (h *TestAnsiEventHandler) HVP(params []string) error {
 	h.recordCall("HVP", params)
 	return nil
 }

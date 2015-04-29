@@ -10,16 +10,16 @@ func (ap *AnsiParser) collectParam(b byte) error {
 	return nil
 }
 
-func parseParams(bytes []byte) ([]int, error) {
+func parseParams(bytes []byte) ([]string, error) {
 	paramBuff := make([]byte, 0, 0)
-	params := []int{}
+	params := []string{}
 
 	for _, v := range bytes {
 		if v == ';' {
 			if len(paramBuff) > 0 {
 				// Completed parameter, append it to the list
-				i := convertBytesToInteger(paramBuff)
-				params = append(params, i)
+				s := string(paramBuff)
+				params = append(params, s)
 				paramBuff = make([]byte, 0, 0)
 			}
 		} else {
@@ -29,8 +29,8 @@ func parseParams(bytes []byte) ([]int, error) {
 
 	// Last parameter may not be terminated with ';'
 	if len(paramBuff) > 0 {
-		i := convertBytesToInteger(paramBuff)
-		params = append(params, i)
+		s := string(paramBuff)
+		params = append(params, s)
 	}
 
 	log.Infof("Parsed params: %v with length: %d", params, len(params))

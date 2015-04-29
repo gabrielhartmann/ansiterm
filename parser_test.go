@@ -41,21 +41,21 @@ func TestCollectCsiParams(t *testing.T) {
 }
 
 func TestParseParams(t *testing.T) {
-	parseParamsHelper(t, []byte{}, []int{})
-	parseParamsHelper(t, []byte{';'}, []int{})
-	parseParamsHelper(t, []byte{';', ';'}, []int{})
-	parseParamsHelper(t, []byte{'7'}, []int{7})
-	parseParamsHelper(t, []byte{'7', ';'}, []int{7})
-	parseParamsHelper(t, []byte{'7', ';', ';'}, []int{7})
-	parseParamsHelper(t, []byte{'7', ';', ';', '8'}, []int{7, 8})
-	parseParamsHelper(t, []byte{'7', ';', '8', ';'}, []int{7, 8})
-	parseParamsHelper(t, []byte{'7', ';', ';', '8', ';', ';'}, []int{7, 8})
-	parseParamsHelper(t, []byte{'7', '8'}, []int{78})
-	parseParamsHelper(t, []byte{'7', '8', ';'}, []int{78})
-	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0'}, []int{78, 90})
-	parseParamsHelper(t, []byte{'7', '8', ';', ';', '9', '0'}, []int{78, 90})
-	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0', ';'}, []int{78, 90})
-	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0', ';', ';'}, []int{78, 90})
+	parseParamsHelper(t, []byte{}, []string{})
+	parseParamsHelper(t, []byte{';'}, []string{})
+	parseParamsHelper(t, []byte{';', ';'}, []string{})
+	parseParamsHelper(t, []byte{'7'}, []string{"7"})
+	parseParamsHelper(t, []byte{'7', ';'}, []string{"7"})
+	parseParamsHelper(t, []byte{'7', ';', ';'}, []string{"7"})
+	parseParamsHelper(t, []byte{'7', ';', ';', '8'}, []string{"7", "8"})
+	parseParamsHelper(t, []byte{'7', ';', '8', ';'}, []string{"7", "8"})
+	parseParamsHelper(t, []byte{'7', ';', ';', '8', ';', ';'}, []string{"7", "8"})
+	parseParamsHelper(t, []byte{'7', '8'}, []string{"78"})
+	parseParamsHelper(t, []byte{'7', '8', ';'}, []string{"78"})
+	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0'}, []string{"78", "90"})
+	parseParamsHelper(t, []byte{'7', '8', ';', ';', '9', '0'}, []string{"78", "90"})
+	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0', ';'}, []string{"78", "90"})
+	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0', ';', ';'}, []string{"78", "90"})
 }
 
 func cursorHelper(t *testing.T, command byte, funcName string) {

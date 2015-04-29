@@ -27,7 +27,7 @@ func funcCallParamHelper(t *testing.T, bytes []byte, expectedState State, expect
 	validateFuncCalls(t, evtHandler.FunctionCalls, expectedCalls)
 }
 
-func parseParamsHelper(t *testing.T, bytes []byte, expectedParams []int) {
+func parseParamsHelper(t *testing.T, bytes []byte, expectedParams []string) {
 	params, err := parseParams(bytes)
 
 	if err != nil {
@@ -46,7 +46,7 @@ func parseParamsHelper(t *testing.T, bytes []byte, expectedParams []int) {
 		if v != params[i] {
 			t.Errorf("Parsed   parameters: %v", params)
 			t.Errorf("Expected parameters: %v", expectedParams)
-			t.Errorf("Parameter parse failure: %d != %d at position %d", v, params[i], i)
+			t.Errorf("Parameter parse failure: %s != %s at position %d", v, params[i], i)
 		}
 	}
 }

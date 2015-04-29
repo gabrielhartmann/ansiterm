@@ -2,29 +2,29 @@ package ansiterm
 
 type AnsiEventHandler interface {
 	// CUrsor Up
-	CUU([]int) error
+	CUU([]string) error
 
 	// CUrsor Down
-	CUD([]int) error
+	CUD([]string) error
 
 	// CUrsor Forward
-	CUF([]int) error
+	CUF([]string) error
 
 	// CUrsor Backward
-	CUB([]int) error
+	CUB([]string) error
 
 	// Cursor to Next Line
-	CNL([]int) error
+	CNL([]string) error
 
 	// Cursor to Previous Line
-	CPL([]int) error
+	CPL([]string) error
 
 	// Cursor Horizontal position Absolute
-	CHA([]int) error
+	CHA([]string) error
 
 	// CUrsor Position
-	CUP([]int) error
+	CUP([]string) error
 
 	// Horizontal and Vertical Position (depends on PUM)
-	HVP([]int) error
+	HVP([]string) error
 }
