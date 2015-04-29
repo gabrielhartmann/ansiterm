@@ -51,6 +51,8 @@ func (ap *AnsiParser) csiDispatch() error {
 		return ap.eventHandler.CUB(params)
 	case 'E':
 		return ap.eventHandler.CNL(params)
+	case 'F':
+		return ap.eventHandler.CPL(params)
 	}
 
 	return nil

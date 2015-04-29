@@ -15,4 +15,7 @@ type AnsiEventHandler interface {
 
 	//Cursor to Next Line
 	CNL([]int) error
+
+	//Cursor to Previous Line
+	CPL([]int) error
 }

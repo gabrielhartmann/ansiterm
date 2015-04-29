@@ -87,4 +87,11 @@ func TestCursor(t *testing.T) {
 	funcCallParamHelper(t, []byte{'2', '3', 'E'}, Ground, []string{"CNL([23])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', 'E'}, Ground, []string{"CNL([2 3])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'E'}, Ground, []string{"CNL([2 3 4])"})
+
+	funcCallParamHelper(t, []byte{'F'}, Ground, []string{"CPL([])"})
+	funcCallParamHelper(t, []byte{'2', 'F'}, Ground, []string{"CPL([2])"})
+	funcCallParamHelper(t, []byte{'2', '3', 'F'}, Ground, []string{"CPL([23])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', 'F'}, Ground, []string{"CPL([2 3])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'F'}, Ground, []string{"CPL([2 3 4])"})
+
 }

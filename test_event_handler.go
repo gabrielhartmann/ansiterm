@@ -43,3 +43,8 @@ func (h *TestAnsiEventHandler) CNL(params []int) error {
 	h.recordCall("CNL", params)
 	return nil
 }
+
+func (h *TestAnsiEventHandler) CPL(params []int) error {
+	h.recordCall("CPL", params)
+	return nil
+}
