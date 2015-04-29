@@ -4,13 +4,10 @@ import (
 	"testing"
 )
 
-func anyToXHelper(t *testing.T, bytes []byte, expectedState State) {
-	for i := 0; i < int(stateCount); i++ {
-		s := StateId(i)
-		parser, _ := createTestParser(stateMap[s])
-		parser.Parse(bytes)
-		validateState(t, parser.state, expectedState)
-	}
+func TestStateTransitions(t *testing.T) {
+	stateTransitionHelper(t, CsiEntry, Ground, AllCase)
+	stateTransitionHelper(t, CsiEntry, CsiParam, CsiCollectables)
+	stateTransitionHelper(t, Escape, CsiEntry, []byte{ANSI_ESCAPE_SECONDARY})
 }
 
 func TestAnyToX(t *testing.T) {
@@ -18,26 +15,6 @@ func TestAnyToX(t *testing.T) {
 	anyToXHelper(t, []byte{DCS_ENTRY}, DcsEntry)
 	anyToXHelper(t, []byte{OSC_STRING}, OscString)
 	anyToXHelper(t, []byte{CSI_ENTRY}, CsiEntry)
-}
-
-func TestEscapeToCsiEntry(t *testing.T) {
-	parser, _ := createTestParser(Escape)
-	parser.Parse([]byte{ANSI_ESCAPE_SECONDARY})
-	validateState(t, parser.state, CsiEntry)
-}
-
-func stateTransitionHelper(t *testing.T, start State, end State, bytes []byte) {
-	for _, b := range bytes {
-		bytes := []byte{byte(b)}
-		parser, _ := createTestParser(start)
-		parser.Parse(bytes)
-		validateState(t, parser.state, end)
-	}
-}
-
-func TestCsiEntryToX(t *testing.T) {
-	stateTransitionHelper(t, CsiEntry, Ground, AllCase)
-	stateTransitionHelper(t, CsiEntry, CsiParam, CsiCollectables)
 }
 
 func TestCollectCsiParams(t *testing.T) {
@@ -62,30 +39,6 @@ func TestCollectCsiParams(t *testing.T) {
 	}
 }
 
-func parseParamsHelper(t *testing.T, bytes []byte, expectedParams []int) {
-	params, err := parseParams(bytes)
-
-	if err != nil {
-		t.Errorf("Parameter parse error: %v", err)
-		return
-	}
-
-	if len(params) != len(expectedParams) {
-		t.Errorf("Parsed   parameters: %v", params)
-		t.Errorf("Expected parameters: %v", expectedParams)
-		t.Errorf("Parameter length failure: %d != %d", len(params), len(expectedParams))
-		return
-	}
-
-	for i, v := range expectedParams {
-		if v != params[i] {
-			t.Errorf("Parsed   parameters: %v", params)
-			t.Errorf("Expected parameters: %v", expectedParams)
-			t.Errorf("Parameter parse failure: %d != %d at position %d", v, params[i], i)
-		}
-	}
-}
-
 func TestParseParams(t *testing.T) {
 	parseParamsHelper(t, []byte{}, []int{})
 	parseParamsHelper(t, []byte{';'}, []int{})
@@ -104,14 +57,7 @@ func TestParseParams(t *testing.T) {
 	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0', ';', ';'}, []int{78, 90})
 }
 
-func funcCallParamHelper(t *testing.T, bytes []byte, expectedState State, expectedCalls []string) {
-	parser, evtHandler := createTestParser(CsiEntry)
-	parser.Parse(bytes)
-	validateState(t, parser.state, expectedState)
-	validateFuncCalls(t, evtHandler.FunctionCalls, expectedCalls)
-}
-
-func TestCursorParam(t *testing.T) {
+func TestCursor(t *testing.T) {
 	funcCallParamHelper(t, []byte{'A'}, Ground, []string{"CUU([])"})
 	funcCallParamHelper(t, []byte{'2', 'A'}, Ground, []string{"CUU([2])"})
 	funcCallParamHelper(t, []byte{'2', '3', 'A'}, Ground, []string{"CUU([23])"})
