@@ -12,4 +12,7 @@ type AnsiEventHandler interface {
 
 	//CUrsor Backward
 	CUB([]int) error
+
+	//Cursor to Next Line
+	CNL([]int) error
 }

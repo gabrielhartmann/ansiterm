@@ -38,3 +38,8 @@ func (h *TestAnsiEventHandler) CUB(params []int) error {
 	h.recordCall("CUB", params)
 	return nil
 }
+
+func (h *TestAnsiEventHandler) CNL(params []int) error {
+	h.recordCall("CNL", params)
+	return nil
+}
