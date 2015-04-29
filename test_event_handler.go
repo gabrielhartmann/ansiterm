@@ -48,3 +48,18 @@ func (h *TestAnsiEventHandler) CPL(params []int) error {
 	h.recordCall("CPL", params)
 	return nil
 }
+
+func (h *TestAnsiEventHandler) CHA(params []int) error {
+	h.recordCall("CHA", params)
+	return nil
+}
+
+func (h *TestAnsiEventHandler) CUP(params []int) error {
+	h.recordCall("CUP", params)
+	return nil
+}
+
+func (h *TestAnsiEventHandler) HVP(params []int) error {
+	h.recordCall("HVP", params)
+	return nil
+}

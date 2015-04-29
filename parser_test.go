@@ -94,4 +94,21 @@ func TestCursor(t *testing.T) {
 	funcCallParamHelper(t, []byte{'2', ';', '3', 'F'}, Ground, []string{"CPL([2 3])"})
 	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'F'}, Ground, []string{"CPL([2 3 4])"})
 
+	funcCallParamHelper(t, []byte{'G'}, Ground, []string{"CHA([])"})
+	funcCallParamHelper(t, []byte{'2', 'G'}, Ground, []string{"CHA([2])"})
+	funcCallParamHelper(t, []byte{'2', '3', 'G'}, Ground, []string{"CHA([23])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', 'G'}, Ground, []string{"CHA([2 3])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'G'}, Ground, []string{"CHA([2 3 4])"})
+
+	funcCallParamHelper(t, []byte{'H'}, Ground, []string{"CUP([])"})
+	funcCallParamHelper(t, []byte{'2', 'H'}, Ground, []string{"CUP([2])"})
+	funcCallParamHelper(t, []byte{'2', '3', 'H'}, Ground, []string{"CUP([23])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', 'H'}, Ground, []string{"CUP([2 3])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'H'}, Ground, []string{"CUP([2 3 4])"})
+
+	funcCallParamHelper(t, []byte{'f'}, Ground, []string{"HVP([])"})
+	funcCallParamHelper(t, []byte{'2', 'f'}, Ground, []string{"HVP([2])"})
+	funcCallParamHelper(t, []byte{'2', '3', 'f'}, Ground, []string{"HVP([23])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', 'f'}, Ground, []string{"HVP([2 3])"})
+	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', 'f'}, Ground, []string{"HVP([2 3 4])"})
 }

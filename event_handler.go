@@ -7,15 +7,24 @@ type AnsiEventHandler interface {
 	// CUrsor Down
 	CUD([]int) error
 
-	//CUrsor Forward
+	// CUrsor Forward
 	CUF([]int) error
 
-	//CUrsor Backward
+	// CUrsor Backward
 	CUB([]int) error
 
-	//Cursor to Next Line
+	// Cursor to Next Line
 	CNL([]int) error
 
-	//Cursor to Previous Line
+	// Cursor to Previous Line
 	CPL([]int) error
+
+	// Cursor Horizontal position Absolute
+	CHA([]int) error
+
+	// CUrsor Position
+	CUP([]int) error
+
+	// Horizontal and Vertical Position (depends on PUM)
+	HVP([]int) error
 }
