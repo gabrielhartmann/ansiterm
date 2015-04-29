@@ -1,0 +1,19 @@
+package ansiterm
+
+type EscapeState struct {
+	BaseState
+}
+
+func (escState EscapeState) Handle(b byte) (s State, e error) {
+	nextState, err := escState.BaseState.Handle(b)
+	if nextState != nil || err != nil {
+		return nextState, err
+	}
+
+	switch b {
+	case ANSI_ESCAPE_SECONDARY:
+		return CsiEntry, nil
+	}
+
+	return escState, nil
+}
