@@ -85,10 +85,6 @@ type ErrorState struct {
 	BaseState
 }
 
-type GroundState struct {
-	BaseState
-}
-
 type OscStringState struct {
 	BaseState
 }

@@ -133,9 +133,12 @@ var UpperCase = getByteRange(0x40, 0x5F)
 
 // Lowercase	  60-7E hex  `abcdefghijlkmnopqrstuvwxyz{|}~
 var LowerCase = getByteRange(0x60, 0x7E)
+
+// Alphabetics	  40-7E hex  (all of upper and lower case)
 var Alphabetics = append(UpperCase, LowerCase...)
 
-// Alphabetic	  40-7E hex  (all of upper and lower case)
+var Printables = getByteRange(0x20, 0x7F)
+
 // Delete		     7F hex  Always and everywhere ignored
 // C1 Control	  80-9F hex  32 additional control characters
 // G1 Displayable A1-FE hex  94 additional displayable characters

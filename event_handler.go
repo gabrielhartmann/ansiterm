@@ -1,6 +1,9 @@
 package ansiterm
 
 type AnsiEventHandler interface {
+	// Print
+	Print(b byte) error
+
 	// CUrsor Up
 	CUU(int) error
 

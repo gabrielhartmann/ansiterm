@@ -36,6 +36,7 @@ func validateFuncCalls(t *testing.T, actualCalls []string, expectedCalls []strin
 		t.Errorf("Actual   calls: %v", actualCalls)
 		t.Errorf("Expected calls: %v", expectedCalls)
 		t.Errorf("Call count error: %d != %d", actualCount, expectedCount)
+		return
 	}
 
 	for i, v := range actualCalls {

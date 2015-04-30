@@ -1,6 +1,7 @@
 package ansiterm
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -90,4 +91,18 @@ func TestSelectGraphicRendition(t *testing.T) {
 func TestPan(t *testing.T) {
 	panHelper(t, 'S', "SU")
 	panHelper(t, 'T', "SD")
+}
+
+func TestPrint(t *testing.T) {
+	parser, evtHandler := createTestParser(Ground)
+	parser.Parse(Printables)
+	validateState(t, parser.state, Ground)
+
+	for i, v := range Printables {
+		expectedCall := fmt.Sprintf("Print([%s])", string(v))
+		actualCall := evtHandler.FunctionCalls[i]
+		if actualCall != expectedCall {
+			t.Errorf("Actual != Expected: %v != %v at %d", actualCall, expectedCall, i)
+		}
+	}
 }

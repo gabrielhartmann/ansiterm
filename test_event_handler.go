@@ -20,6 +20,11 @@ func (h *TestAnsiEventHandler) recordCall(call string, params []string) {
 	h.FunctionCalls = append(h.FunctionCalls, s)
 }
 
+func (h *TestAnsiEventHandler) Print(b byte) error {
+	h.recordCall("Print", []string{string(b)})
+	return nil
+}
+
 func (h *TestAnsiEventHandler) CUU(param int) error {
 	h.recordCall("CUU", []string{strconv.Itoa(param)})
 	return nil

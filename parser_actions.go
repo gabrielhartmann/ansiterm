@@ -148,3 +148,8 @@ func (ap *AnsiParser) csiDispatch() error {
 
 	return errors.New(fmt.Sprintf("%v", ap.context))
 }
+
+func (ap *AnsiParser) print() error {
+	log.Infof("AnsiParser::print %#x", ap.context.currentChar)
+	return ap.eventHandler.Print(ap.context.currentChar)
+}
