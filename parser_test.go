@@ -71,3 +71,11 @@ func TestCursor(t *testing.T) {
 	funcCallParamHelper(t, []byte{'?', '2', '5', 'h'}, Ground, []string{"DECTCEM([true])"})
 	funcCallParamHelper(t, []byte{'?', '2', '5', 'l'}, Ground, []string{"DECTCEM([false])"})
 }
+
+func TestErase(t *testing.T) {
+	// Erase in Display
+	eraseHelper(t, 'J', "ED")
+
+	// Erase in Line
+	eraseHelper(t, 'K', "EL")
+}

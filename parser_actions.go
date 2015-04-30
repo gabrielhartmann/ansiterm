@@ -92,6 +92,15 @@ func (ap *AnsiParser) lDispatch(params []string) error {
 	return nil
 }
 
+func getEraseParam(params []string) int {
+	param := getInt(params, 0)
+	if param < 0 || 3 < param {
+		param = 0
+	}
+
+	return param
+}
+
 func (ap *AnsiParser) csiDispatch() error {
 	cmd, _ := parseCmd(*ap.context)
 	params, _ := parseParams(ap.context.paramBuffer)
@@ -115,6 +124,12 @@ func (ap *AnsiParser) csiDispatch() error {
 		ints := getInts(params, 2, 1)
 		x, y := ints[0], ints[1]
 		return ap.eventHandler.CUP(x, y)
+	case "J":
+		param := getEraseParam(params)
+		return ap.eventHandler.ED(param)
+	case "K":
+		param := getEraseParam(params)
+		return ap.eventHandler.EL(param)
 	case "f":
 		ints := getInts(params, 2, 1)
 		x, y := ints[0], ints[1]

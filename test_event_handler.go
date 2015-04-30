@@ -71,3 +71,13 @@ func (h *TestAnsiEventHandler) DECTCEM(visible bool) error {
 	h.recordCall("DECTCEM", []string{strconv.FormatBool(visible)})
 	return nil
 }
+
+func (h *TestAnsiEventHandler) ED(param int) error {
+	h.recordCall("ED", []string{strconv.Itoa(param)})
+	return nil
+}
+
+func (h *TestAnsiEventHandler) EL(param int) error {
+	h.recordCall("EL", []string{strconv.Itoa(param)})
+	return nil
+}

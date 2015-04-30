@@ -67,3 +67,13 @@ func cursorTwoParamHelper(t *testing.T, command byte, funcName string) {
 	funcCallParamHelper(t, []byte{'2', ';', '3', command}, Ground, []string{fmt.Sprintf("%s([2 3])", funcName)})
 	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', command}, Ground, []string{fmt.Sprintf("%s([2 3])", funcName)})
 }
+
+func eraseHelper(t *testing.T, command byte, funcName string) {
+	funcCallParamHelper(t, []byte{command}, Ground, []string{fmt.Sprintf("%s([0])", funcName)})
+	funcCallParamHelper(t, []byte{'0', command}, Ground, []string{fmt.Sprintf("%s([0])", funcName)})
+	funcCallParamHelper(t, []byte{'1', command}, Ground, []string{fmt.Sprintf("%s([1])", funcName)})
+	funcCallParamHelper(t, []byte{'2', command}, Ground, []string{fmt.Sprintf("%s([2])", funcName)})
+	funcCallParamHelper(t, []byte{'3', command}, Ground, []string{fmt.Sprintf("%s([3])", funcName)})
+	funcCallParamHelper(t, []byte{'4', command}, Ground, []string{fmt.Sprintf("%s([0])", funcName)})
+	funcCallParamHelper(t, []byte{'1', ';', '2', command}, Ground, []string{fmt.Sprintf("%s([1])", funcName)})
+}

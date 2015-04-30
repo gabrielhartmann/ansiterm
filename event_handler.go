@@ -30,4 +30,10 @@ type AnsiEventHandler interface {
 
 	// Text Cursor Enable Mode
 	DECTCEM(bool) error
+
+	// Erase in Display
+	ED(int) error
+
+	// Erase in Line
+	EL(int) error
 }
