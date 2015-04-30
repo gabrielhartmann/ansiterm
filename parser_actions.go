@@ -138,6 +138,8 @@ func (ap *AnsiParser) csiDispatch() error {
 		return ap.hDispatch(params)
 	case "l":
 		return ap.lDispatch(params)
+	case "m":
+		return ap.eventHandler.SGR(getInts(params, 1, 0))
 	}
 
 	return errors.New(fmt.Sprintf("%v", ap.context))

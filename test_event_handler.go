@@ -81,3 +81,13 @@ func (h *TestAnsiEventHandler) EL(param int) error {
 	h.recordCall("EL", []string{strconv.Itoa(param)})
 	return nil
 }
+
+func (h *TestAnsiEventHandler) SGR(params []int) error {
+	strings := []string{}
+	for _, v := range params {
+		strings = append(strings, strconv.Itoa(v))
+	}
+
+	h.recordCall("SGR", strings)
+	return nil
+}

@@ -36,4 +36,7 @@ type AnsiEventHandler interface {
 
 	// Erase in Line
 	EL(int) error
+
+	// Set Graphics Rendition
+	SGR([]int) error
 }

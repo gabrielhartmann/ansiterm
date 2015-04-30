@@ -79,3 +79,10 @@ func TestErase(t *testing.T) {
 	// Erase in Line
 	eraseHelper(t, 'K', "EL")
 }
+
+func TestSelectGraphicRendition(t *testing.T) {
+	funcCallParamHelper(t, []byte{'m'}, Ground, []string{"SGR([0])"})
+	funcCallParamHelper(t, []byte{'0', 'm'}, Ground, []string{"SGR([0])"})
+	funcCallParamHelper(t, []byte{'0', ';', '1', 'm'}, Ground, []string{"SGR([0 1])"})
+	funcCallParamHelper(t, []byte{'0', ';', '1', ';', '2', 'm'}, Ground, []string{"SGR([0 1 2])"})
+}
