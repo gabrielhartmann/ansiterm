@@ -76,6 +76,22 @@ func getInts(params []string, minCount int, dflt int) []int {
 	return ints
 }
 
+func (ap *AnsiParser) hDispatch(params []string) error {
+	if len(params) == 1 && params[0] == "?25" {
+		return ap.eventHandler.DECTCEM(true)
+	}
+
+	return nil
+}
+
+func (ap *AnsiParser) lDispatch(params []string) error {
+	if len(params) == 1 && params[0] == "?25" {
+		return ap.eventHandler.DECTCEM(false)
+	}
+
+	return nil
+}
+
 func (ap *AnsiParser) csiDispatch() error {
 	cmd, _ := parseCmd(*ap.context)
 	params, _ := parseParams(ap.context.paramBuffer)
@@ -104,9 +120,9 @@ func (ap *AnsiParser) csiDispatch() error {
 		x, y := ints[0], ints[1]
 		return ap.eventHandler.HVP(x, y)
 	case "h":
-		return ap.eventHandler.DECTCEM(true)
+		return ap.hDispatch(params)
 	case "l":
-		return ap.eventHandler.DECTCEM(false)
+		return ap.lDispatch(params)
 	}
 
 	return errors.New(fmt.Sprintf("%v", ap.context))
