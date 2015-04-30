@@ -91,3 +91,13 @@ func (h *TestAnsiEventHandler) SGR(params []int) error {
 	h.recordCall("SGR", strings)
 	return nil
 }
+
+func (h *TestAnsiEventHandler) SU(param int) error {
+	h.recordCall("SU", []string{strconv.Itoa(param)})
+	return nil
+}
+
+func (h *TestAnsiEventHandler) SD(param int) error {
+	h.recordCall("SD", []string{strconv.Itoa(param)})
+	return nil
+}

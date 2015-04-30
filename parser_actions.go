@@ -130,6 +130,10 @@ func (ap *AnsiParser) csiDispatch() error {
 	case "K":
 		param := getEraseParam(params)
 		return ap.eventHandler.EL(param)
+	case "S":
+		return ap.eventHandler.SU(getInt(params, 0))
+	case "T":
+		return ap.eventHandler.SD(getInt(params, 0))
 	case "f":
 		ints := getInts(params, 2, 1)
 		x, y := ints[0], ints[1]

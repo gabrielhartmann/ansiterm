@@ -77,3 +77,11 @@ func eraseHelper(t *testing.T, command byte, funcName string) {
 	funcCallParamHelper(t, []byte{'4', command}, Ground, []string{fmt.Sprintf("%s([0])", funcName)})
 	funcCallParamHelper(t, []byte{'1', ';', '2', command}, Ground, []string{fmt.Sprintf("%s([1])", funcName)})
 }
+
+func panHelper(t *testing.T, command byte, funcName string) {
+	funcCallParamHelper(t, []byte{command}, Ground, []string{fmt.Sprintf("%s([0])", funcName)})
+	funcCallParamHelper(t, []byte{'0', command}, Ground, []string{fmt.Sprintf("%s([0])", funcName)})
+	funcCallParamHelper(t, []byte{'1', command}, Ground, []string{fmt.Sprintf("%s([1])", funcName)})
+	funcCallParamHelper(t, []byte{'5', command}, Ground, []string{fmt.Sprintf("%s([5])", funcName)})
+	funcCallParamHelper(t, []byte{'4', ';', '6', command}, Ground, []string{fmt.Sprintf("%s([4])", funcName)})
+}

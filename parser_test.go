@@ -86,3 +86,8 @@ func TestSelectGraphicRendition(t *testing.T) {
 	funcCallParamHelper(t, []byte{'0', ';', '1', 'm'}, Ground, []string{"SGR([0 1])"})
 	funcCallParamHelper(t, []byte{'0', ';', '1', ';', '2', 'm'}, Ground, []string{"SGR([0 1 2])"})
 }
+
+func TestPan(t *testing.T) {
+	panHelper(t, 'S', "SU")
+	panHelper(t, 'T', "SD")
+}

@@ -39,4 +39,10 @@ type AnsiEventHandler interface {
 
 	// Set Graphics Rendition
 	SGR([]int) error
+
+	// Pan Down
+	SU(int) error
+
+	// Pan Up
+	SD(int) error
 }
