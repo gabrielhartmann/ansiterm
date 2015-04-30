@@ -120,20 +120,20 @@ var C0Control = getByteRange(0x0, 0x1F)
 
 // SPACE		  20+A0 hex  Always and everywhere a blank space
 // Intermediate	  20-2F hex   !"#$%&'()*+,-./
+var CsiIntermeds = getByteRange(0x20, 0x2F)
+
 // Parameters	  30-3F hex  0123456789:;<=>?
 // CSI Parameters 30-39, 3B hex 0123456789;
-var CsiParams = append(getByteRange(0x30, 0x39), 0x3B)
+var CsiParams = getByteRange(0x30, 0x3F)
 
-// CSI Intermeds  30C-3F hex <=>?
-var CsiIntermeds = getByteRange(0x3C, 0x3F)
-var CsiCollectables = append(CsiParams, CsiIntermeds...)
+var CsiCollectables = append(getByteRange(0x30, 0x39), getByteRange(0x3B, 0x3F)...)
 
 // Uppercase	  40-5F hex  @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
 var UpperCase = getByteRange(0x40, 0x5F)
 
 // Lowercase	  60-7E hex  `abcdefghijlkmnopqrstuvwxyz{|}~
 var LowerCase = getByteRange(0x60, 0x7E)
-var AllCase = append(UpperCase, LowerCase...)
+var Alphabetics = append(UpperCase, LowerCase...)
 
 // Alphabetic	  40-7E hex  (all of upper and lower case)
 // Delete		     7F hex  Always and everywhere ignored

@@ -42,7 +42,7 @@ func validateFuncCalls(t *testing.T, actualCalls []string, expectedCalls []strin
 		if v != expectedCalls[i] {
 			t.Errorf("Actual   calls: %v", actualCalls)
 			t.Errorf("Expected calls: %v", expectedCalls)
-			t.Errorf("Mismatched calls: %s != %s", v, expectedCalls[i])
+			t.Errorf("Mismatched calls: %s != %s with lengths %d and %d", v, expectedCalls[i], len(v), len(expectedCalls[i]))
 		}
 	}
 }

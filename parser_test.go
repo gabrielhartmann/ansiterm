@@ -1,12 +1,11 @@
 package ansiterm
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestStateTransitions(t *testing.T) {
-	stateTransitionHelper(t, CsiEntry, Ground, AllCase)
+	stateTransitionHelper(t, CsiEntry, Ground, Alphabetics)
 	stateTransitionHelper(t, CsiEntry, CsiParam, CsiCollectables)
 	stateTransitionHelper(t, Escape, CsiEntry, []byte{ANSI_ESCAPE_SECONDARY})
 }
@@ -20,18 +19,19 @@ func TestAnyToX(t *testing.T) {
 
 func TestCollectCsiParams(t *testing.T) {
 	parser, _ := createTestParser(CsiEntry)
-	parser.Parse(CsiParams)
+	parser.Parse(CsiCollectables)
 
-	buffer := parser.context.parameterBuffer
+	buffer := parser.context.paramBuffer
 	bufferCount := len(buffer)
 
-	if bufferCount != len(CsiParams) {
-		t.Errorf("%v", parser.context.parameterBuffer)
+	if bufferCount != len(CsiCollectables) {
+		t.Errorf("Buffer:    %v", buffer)
+		t.Errorf("CsiParams: %v", CsiCollectables)
 		t.Errorf("Buffer count failure: %d != %d", bufferCount, len(CsiParams))
 		return
 	}
 
-	for i, v := range CsiParams {
+	for i, v := range CsiCollectables {
 		if v != buffer[i] {
 			t.Errorf("Buffer:    %v", buffer)
 			t.Errorf("CsiParams: %v", CsiParams)
@@ -58,22 +58,16 @@ func TestParseParams(t *testing.T) {
 	parseParamsHelper(t, []byte{'7', '8', ';', '9', '0', ';', ';'}, []string{"78", "90"})
 }
 
-func cursorHelper(t *testing.T, command byte, funcName string) {
-	funcCallParamHelper(t, []byte{command}, Ground, []string{fmt.Sprintf("%s([])", funcName)})
-	funcCallParamHelper(t, []byte{'2', command}, Ground, []string{fmt.Sprintf("%s([2])", funcName)})
-	funcCallParamHelper(t, []byte{'2', '3', command}, Ground, []string{fmt.Sprintf("%s([23])", funcName)})
-	funcCallParamHelper(t, []byte{'2', ';', '3', command}, Ground, []string{fmt.Sprintf("%s([2 3])", funcName)})
-	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', command}, Ground, []string{fmt.Sprintf("%s([2 3 4])", funcName)})
-}
-
 func TestCursor(t *testing.T) {
-	cursorHelper(t, 'A', "CUU")
-	cursorHelper(t, 'B', "CUD")
-	cursorHelper(t, 'C', "CUF")
-	cursorHelper(t, 'D', "CUB")
-	cursorHelper(t, 'E', "CNL")
-	cursorHelper(t, 'F', "CPL")
-	cursorHelper(t, 'G', "CHA")
-	cursorHelper(t, 'H', "CUP")
-	cursorHelper(t, 'f', "HVP")
+	cursorSingleParamHelper(t, 'A', "CUU")
+	cursorSingleParamHelper(t, 'B', "CUD")
+	cursorSingleParamHelper(t, 'C', "CUF")
+	cursorSingleParamHelper(t, 'D', "CUB")
+	cursorSingleParamHelper(t, 'E', "CNL")
+	cursorSingleParamHelper(t, 'F', "CPL")
+	cursorSingleParamHelper(t, 'G', "CHA")
+	cursorTwoParamHelper(t, 'H', "CUP")
+	cursorTwoParamHelper(t, 'f', "HVP")
+	funcCallParamHelper(t, []byte{'?', '2', '5', 'h'}, Ground, []string{"DECTCEM([true])"})
+	funcCallParamHelper(t, []byte{'?', '2', '5', 'l'}, Ground, []string{"DECTCEM([false])"})
 }

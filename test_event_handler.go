@@ -2,6 +2,7 @@ package ansiterm
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type TestAnsiEventHandler struct {
@@ -19,47 +20,54 @@ func (h *TestAnsiEventHandler) recordCall(call string, params []string) {
 	h.FunctionCalls = append(h.FunctionCalls, s)
 }
 
-func (h *TestAnsiEventHandler) CUU(params []string) error {
-	h.recordCall("CUU", params)
+func (h *TestAnsiEventHandler) CUU(param int) error {
+	h.recordCall("CUU", []string{strconv.Itoa(param)})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUD(params []string) error {
-	h.recordCall("CUD", params)
+func (h *TestAnsiEventHandler) CUD(param int) error {
+	h.recordCall("CUD", []string{strconv.Itoa(param)})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUF(params []string) error {
-	h.recordCall("CUF", params)
+func (h *TestAnsiEventHandler) CUF(param int) error {
+	h.recordCall("CUF", []string{strconv.Itoa(param)})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUB(params []string) error {
-	h.recordCall("CUB", params)
+func (h *TestAnsiEventHandler) CUB(param int) error {
+	h.recordCall("CUB", []string{strconv.Itoa(param)})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CNL(params []string) error {
-	h.recordCall("CNL", params)
+func (h *TestAnsiEventHandler) CNL(param int) error {
+	h.recordCall("CNL", []string{strconv.Itoa(param)})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CPL(params []string) error {
-	h.recordCall("CPL", params)
+func (h *TestAnsiEventHandler) CPL(param int) error {
+	h.recordCall("CPL", []string{strconv.Itoa(param)})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CHA(params []string) error {
-	h.recordCall("CHA", params)
+func (h *TestAnsiEventHandler) CHA(param int) error {
+	h.recordCall("CHA", []string{strconv.Itoa(param)})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) CUP(params []string) error {
-	h.recordCall("CUP", params)
+func (h *TestAnsiEventHandler) CUP(x int, y int) error {
+	xS, yS := strconv.Itoa(x), strconv.Itoa(y)
+	h.recordCall("CUP", []string{xS, yS})
 	return nil
 }
 
-func (h *TestAnsiEventHandler) HVP(params []string) error {
-	h.recordCall("HVP", params)
+func (h *TestAnsiEventHandler) HVP(x int, y int) error {
+	xS, yS := strconv.Itoa(x), strconv.Itoa(y)
+	h.recordCall("HVP", []string{xS, yS})
+	return nil
+}
+
+func (h *TestAnsiEventHandler) DECTCEM(visible bool) error {
+	h.recordCall("DECTCEM", []string{strconv.FormatBool(visible)})
 	return nil
 }

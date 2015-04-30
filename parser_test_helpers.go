@@ -1,6 +1,7 @@
 package ansiterm
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -49,4 +50,20 @@ func parseParamsHelper(t *testing.T, bytes []byte, expectedParams []string) {
 			t.Errorf("Parameter parse failure: %s != %s at position %d", v, params[i], i)
 		}
 	}
+}
+
+func cursorSingleParamHelper(t *testing.T, command byte, funcName string) {
+	funcCallParamHelper(t, []byte{command}, Ground, []string{fmt.Sprintf("%s([1])", funcName)})
+	funcCallParamHelper(t, []byte{'2', command}, Ground, []string{fmt.Sprintf("%s([2])", funcName)})
+	funcCallParamHelper(t, []byte{'2', '3', command}, Ground, []string{fmt.Sprintf("%s([23])", funcName)})
+	funcCallParamHelper(t, []byte{'2', ';', '3', command}, Ground, []string{fmt.Sprintf("%s([2])", funcName)})
+	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', command}, Ground, []string{fmt.Sprintf("%s([2])", funcName)})
+}
+
+func cursorTwoParamHelper(t *testing.T, command byte, funcName string) {
+	funcCallParamHelper(t, []byte{command}, Ground, []string{fmt.Sprintf("%s([1 1])", funcName)})
+	funcCallParamHelper(t, []byte{'2', command}, Ground, []string{fmt.Sprintf("%s([2 1])", funcName)})
+	funcCallParamHelper(t, []byte{'2', '3', command}, Ground, []string{fmt.Sprintf("%s([23 1])", funcName)})
+	funcCallParamHelper(t, []byte{'2', ';', '3', command}, Ground, []string{fmt.Sprintf("%s([2 3])", funcName)})
+	funcCallParamHelper(t, []byte{'2', ';', '3', ';', '4', command}, Ground, []string{fmt.Sprintf("%s([2 3])", funcName)})
 }

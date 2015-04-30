@@ -18,7 +18,7 @@ func (csiState CsiEntryState) Handle(b byte) (s State, e error) {
 	}
 
 	switch {
-	case sliceContains(AllCase, b):
+	case sliceContains(Alphabetics, b):
 		return Ground, nil
 	case sliceContains(CsiCollectables, b):
 		return CsiParam, nil
@@ -38,6 +38,8 @@ func (csiState CsiEntryState) Transition(s State) error {
 		switch {
 		case sliceContains(CsiParams, parser.context.currentChar):
 			parser.collectParam(parser.context.currentChar)
+		case sliceContains(CsiIntermeds, parser.context.currentChar):
+			parser.collectInter(parser.context.currentChar)
 		}
 	}
 
