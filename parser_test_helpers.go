@@ -85,3 +85,11 @@ func panHelper(t *testing.T, command byte, funcName string) {
 	funcCallParamHelper(t, []byte{'5', command}, Ground, []string{fmt.Sprintf("%s([5])", funcName)})
 	funcCallParamHelper(t, []byte{'4', ';', '6', command}, Ground, []string{fmt.Sprintf("%s([4])", funcName)})
 }
+
+func clearOnStateChangeHelper(t *testing.T, start State, end State, bytes []byte) {
+	p, _ := createTestParser(start)
+	fillContext(p.context)
+	p.Parse(bytes)
+	validateState(t, p.state, end)
+	validateEmptyContext(t, p.context)
+}

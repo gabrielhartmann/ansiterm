@@ -45,3 +45,8 @@ func (csiState CsiEntryState) Transition(s State) error {
 
 	return nil
 }
+
+func (csiState CsiEntryState) Enter() error {
+	parser.clear()
+	return nil
+}

@@ -153,3 +153,8 @@ func (ap *AnsiParser) print() error {
 	log.Infof("AnsiParser::print %#x", ap.context.currentChar)
 	return ap.eventHandler.Print(ap.context.currentChar)
 }
+
+func (ap *AnsiParser) clear() error {
+	ap.context = &AnsiContext{}
+	return nil
+}

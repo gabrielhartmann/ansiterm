@@ -106,3 +106,15 @@ func TestPrint(t *testing.T) {
 		}
 	}
 }
+
+func TestClear(t *testing.T) {
+	p, _ := createTestParser(Ground)
+	fillContext(p.context)
+	p.clear()
+	validateEmptyContext(t, p.context)
+}
+
+func TestClearOnStateChange(t *testing.T) {
+	clearOnStateChangeHelper(t, Ground, Escape, []byte{ANSI_ESCAPE_PRIMARY})
+	clearOnStateChangeHelper(t, Ground, CsiEntry, []byte{CSI_ENTRY})
+}

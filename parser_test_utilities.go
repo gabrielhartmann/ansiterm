@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func createTestParser(s State) (AnsiParser, *TestAnsiEventHandler) {
+func createTestParser(s State) (*AnsiParser, *TestAnsiEventHandler) {
 	evtHandler := CreateTestAnsiEventHandler()
 	parser := CreateParser(s, &evtHandler)
 
@@ -46,4 +46,32 @@ func validateFuncCalls(t *testing.T, actualCalls []string, expectedCalls []strin
 			t.Errorf("Mismatched calls: %s != %s with lengths %d and %d", v, expectedCalls[i], len(v), len(expectedCalls[i]))
 		}
 	}
+}
+
+func fillContext(context *AnsiContext) {
+	context.currentChar = 'A'
+	context.finalChar = 'B'
+	context.paramBuffer = []byte{'C', 'D', 'E'}
+	context.interBuffer = []byte{'F', 'G', 'H'}
+}
+
+func validateEmptyContext(t *testing.T, context *AnsiContext) {
+	var expectedCurrChar byte = 0x0
+	if context.currentChar != expectedCurrChar {
+		t.Errorf("Currentchar mismatch '%#x' != '%#x'", context.currentChar, expectedCurrChar)
+	}
+
+	var expectedFinalChar byte = 0x0
+	if context.finalChar != expectedFinalChar {
+		t.Errorf("Finalchar mismatch '%#x' != '%#x'", context.finalChar, expectedFinalChar)
+	}
+
+	if len(context.paramBuffer) != 0 {
+		t.Errorf("Non-empty parameter buffer: %v", context.paramBuffer)
+	}
+
+	if len(context.paramBuffer) != 0 {
+		t.Errorf("Non-empty intermediate buffer: %v", context.interBuffer)
+	}
+
 }

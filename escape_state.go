@@ -17,3 +17,8 @@ func (escState EscapeState) Handle(b byte) (s State, e error) {
 
 	return escState, nil
 }
+
+func (escState EscapeState) Enter() error {
+	parser.clear()
+	return nil
+}
