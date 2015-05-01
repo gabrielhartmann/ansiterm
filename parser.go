@@ -14,8 +14,8 @@ type AnsiParser struct {
 
 func CreateParser(initialState State, evtHandler AnsiEventHandler) *AnsiParser {
 	parser = &AnsiParser{state: initialState, eventHandler: evtHandler, context: &AnsiContext{}}
-	log.SetLevel(log.InfoLevel)
-	//log.SetLevel(log.WarnLevel)
+	//log.SetLevel(log.InfoLevel)
+	log.SetLevel(log.WarnLevel)
 	return parser
 }
 
