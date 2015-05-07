@@ -6,9 +6,9 @@ import (
 
 func createTestParser(s State) (*AnsiParser, *TestAnsiEventHandler) {
 	evtHandler := CreateTestAnsiEventHandler()
-	parser := CreateParser(s, &evtHandler)
+	parser := CreateParser(s, evtHandler)
 
-	return parser, &evtHandler
+	return parser, evtHandler
 }
 
 func validateState(t *testing.T, actualState State, expectedState State) {

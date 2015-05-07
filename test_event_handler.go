@@ -9,10 +9,10 @@ type TestAnsiEventHandler struct {
 	FunctionCalls []string
 }
 
-func CreateTestAnsiEventHandler() TestAnsiEventHandler {
+func CreateTestAnsiEventHandler() *TestAnsiEventHandler {
 	evtHandler := TestAnsiEventHandler{}
 	evtHandler.FunctionCalls = make([]string, 0)
-	return evtHandler
+	return &evtHandler
 }
 
 func (h *TestAnsiEventHandler) recordCall(call string, params []string) {

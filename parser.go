@@ -1,10 +1,31 @@
 package ansiterm
 
 import (
-	log "github.com/Sirupsen/logrus"
+	"os"
+
+	"github.com/Sirupsen/logrus"
 )
 
 var parser *AnsiParser
+var logFile *os.File
+var log *logrus.Logger
+
+func init() {
+	filename := "parse.txt"
+
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		logFile, err = os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0x0666)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	log = &logrus.Logger{
+		Out:       logFile,
+		Formatter: new(logrus.TextFormatter),
+		Level:     logrus.InfoLevel,
+	}
+}
 
 type AnsiParser struct {
 	state        State
@@ -13,9 +34,14 @@ type AnsiParser struct {
 }
 
 func CreateParser(initialState State, evtHandler AnsiEventHandler) *AnsiParser {
-	parser = &AnsiParser{state: initialState, eventHandler: evtHandler, context: &AnsiContext{}}
-	//log.SetLevel(log.InfoLevel)
-	log.SetLevel(log.WarnLevel)
+	log.Infof("CreateParser")
+
+	parser = &AnsiParser{
+		state:        initialState,
+		eventHandler: evtHandler,
+		context:      &AnsiContext{},
+	}
+
 	return parser
 }
 

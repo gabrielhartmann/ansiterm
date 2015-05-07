@@ -1,9 +1,5 @@
 package ansiterm
 
-import (
-	log "github.com/Sirupsen/logrus"
-)
-
 type CsiEntryState struct {
 	BaseState
 }

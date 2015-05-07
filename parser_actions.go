@@ -3,7 +3,6 @@ package ansiterm
 import (
 	"errors"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"strconv"
 )
 
@@ -104,6 +103,8 @@ func getEraseParam(params []string) int {
 func (ap *AnsiParser) csiDispatch() error {
 	cmd, _ := parseCmd(*ap.context)
 	params, _ := parseParams(ap.context.paramBuffer)
+
+	log.Infof("csiDispatch: %v(%v)", cmd, params)
 
 	switch cmd {
 	case "A":
