@@ -78,12 +78,22 @@ func (h *WindowsAnsiEventHandler) HVP(row int, col int) error {
 }
 
 func (h *WindowsAnsiEventHandler) DECTCEM(visible bool) error {
-	log.Infof("DECTCEM: [%v]", []string{strconv.FormatBool(visible)})
+	//log.Infof("DECTCEM: [%v]", []string{strconv.FormatBool(visible)})
+
 	return nil
 }
 
 func (h *WindowsAnsiEventHandler) ED(param int) error {
 	//log.Infof("ED: [%v]", []string{strconv.Itoa(param)})
+
+	// [J  -- Erases from the cursor to the end of the screen, including the cursor position.
+	// [1J -- Erases from the beginning of the screen to the cursor, including the cursor position.
+	// [2J -- Erases the complete display. The cursor does not move.
+	// [3J -- Erases the complete display and backing buffer, cursor moves to (0,0)
+	// Notes:
+	// -- ANSI.SYS always moved the cursor to (0,0) for both [2J and [3J
+	// -- Clearing the entire buffer, versus just the Window, works best for Windows Consoles
+
 	info, err := GetConsoleScreenBufferInfo(h.fd)
 	if err != nil {
 		return err
@@ -126,7 +136,39 @@ func (h *WindowsAnsiEventHandler) ED(param int) error {
 }
 
 func (h *WindowsAnsiEventHandler) EL(param int) error {
-	log.Infof("EL: [%v]", []string{strconv.Itoa(param)})
+	//log.Infof("EL: [%v]", []string{strconv.Itoa(param)})
+
+	// [K  -- Erases from the cursor to the end of the line, including the cursor position.
+	// [1K -- Erases from the beginning of the line to the cursor, including the cursor position.
+	// [2K -- Erases the complete line.
+
+	info, err := GetConsoleScreenBufferInfo(h.fd)
+	if err != nil {
+		return err
+	}
+
+	var start COORD
+	var end COORD
+
+	switch param {
+	case 0:
+		start = info.CursorPosition
+		end = COORD{info.Window.Right, info.CursorPosition.Y}
+
+	case 1:
+		start = COORD{0, info.CursorPosition.Y}
+		end = info.CursorPosition
+
+	case 2:
+		start = COORD{0, info.CursorPosition.Y}
+		end = COORD{info.Window.Right, info.CursorPosition.Y}
+	}
+
+	err = h.clearRange(info.Attributes, start, end)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
