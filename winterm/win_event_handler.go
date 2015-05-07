@@ -15,51 +15,45 @@ func CreateWinEventHandler(fileDesc uintptr) *WindowsAnsiEventHandler {
 	return &WindowsAnsiEventHandler{fd: fileDesc}
 }
 
-// setCursorPosition sets the cursor to the specified position, bounded to the buffer size
-func (h *WindowsAnsiEventHandler) setCursorPosition(position COORD, sizeBuffer COORD) error {
-	position.X = ensureInRange(position.X, 0, sizeBuffer.X-1)
-	position.Y = ensureInRange(position.Y, 0, sizeBuffer.Y-1)
-	return SetConsoleCursorPosition(h.fd, position)
-}
-
 func (h *WindowsAnsiEventHandler) Print(b byte) error {
 	log.Infof("Print: [%v]", []string{string(b)})
 	return nil
 }
 
 func (h *WindowsAnsiEventHandler) CUU(param int) error {
-	log.Infof("CUU: [%v]", []string{strconv.Itoa(param)})
-	return nil
+	//log.Infof("CUU: [%v]", []string{strconv.Itoa(param)})
+	return h.moveCursorVertical(-param)
 }
 
 func (h *WindowsAnsiEventHandler) CUD(param int) error {
-	log.Infof("CUD: [%v]", []string{strconv.Itoa(param)})
-	return nil
+	//log.Infof("CUD: [%v]", []string{strconv.Itoa(param)})
+	return h.moveCursorVertical(param)
 }
 
 func (h *WindowsAnsiEventHandler) CUF(param int) error {
-	log.Infof("CUF: [%v]", []string{strconv.Itoa(param)})
+	//log.Infof("CUF: [%v]", []string{strconv.Itoa(param)})
+	return h.moveCursorHorizontal(param)
 	return nil
 }
 
 func (h *WindowsAnsiEventHandler) CUB(param int) error {
-	log.Infof("CUB: [%v]", []string{strconv.Itoa(param)})
-	return nil
+	//log.Infof("CUB: [%v]", []string{strconv.Itoa(param)})
+	return h.moveCursorHorizontal(-param)
 }
 
 func (h *WindowsAnsiEventHandler) CNL(param int) error {
-	log.Infof("CNL: [%v]", []string{strconv.Itoa(param)})
-	return nil
+	//log.Infof("CNL: [%v]", []string{strconv.Itoa(param)})
+	return h.moveCursorLine(param)
 }
 
 func (h *WindowsAnsiEventHandler) CPL(param int) error {
-	log.Infof("CPL: [%v]", []string{strconv.Itoa(param)})
-	return nil
+	//log.Infof("CPL: [%v]", []string{strconv.Itoa(param)})
+	return h.moveCursorLine(-param)
 }
 
 func (h *WindowsAnsiEventHandler) CHA(param int) error {
-	log.Infof("CHA: [%v]", []string{strconv.Itoa(param)})
-	return nil
+	//log.Infof("CHA: [%v]", []string{strconv.Itoa(param)})
+	return h.moveCursorColumn(param)
 }
 
 func (h *WindowsAnsiEventHandler) CUP(row int, col int) error {
@@ -77,10 +71,10 @@ func (h *WindowsAnsiEventHandler) CUP(row int, col int) error {
 	return h.setCursorPosition(position, info.Size)
 }
 
-func (h *WindowsAnsiEventHandler) HVP(x int, y int) error {
-	xS, yS := strconv.Itoa(x), strconv.Itoa(y)
-	log.Infof("HVP: [%v]", []string{xS, yS})
-	return nil
+func (h *WindowsAnsiEventHandler) HVP(row int, col int) error {
+	// rowS, colS := strconv.Itoa(row), strconv.Itoa(row)
+	// log.Infof("HVP: [%v]", []string{rowS, colS})
+	return h.CUP(row, col)
 }
 
 func (h *WindowsAnsiEventHandler) DECTCEM(visible bool) error {
@@ -89,7 +83,45 @@ func (h *WindowsAnsiEventHandler) DECTCEM(visible bool) error {
 }
 
 func (h *WindowsAnsiEventHandler) ED(param int) error {
-	log.Infof("ED: [%v]", []string{strconv.Itoa(param)})
+	//log.Infof("ED: [%v]", []string{strconv.Itoa(param)})
+	info, err := GetConsoleScreenBufferInfo(h.fd)
+	if err != nil {
+		return err
+	}
+
+	var start COORD
+	var end COORD
+
+	switch param {
+	case 0:
+		start = info.CursorPosition
+		end = COORD{info.Size.X - 1, info.Size.Y - 1}
+
+	case 1:
+		start = COORD{0, 0}
+		end = info.CursorPosition
+
+	case 2:
+		start = COORD{0, 0}
+		end = COORD{info.Size.X - 1, info.Size.Y - 1}
+
+	case 3:
+		start = COORD{0, 0}
+		end = COORD{info.Size.X - 1, info.Size.Y - 1}
+	}
+
+	err = h.clearRange(info.Attributes, start, end)
+	if err != nil {
+		return err
+	}
+
+	if param == 2 || param == 3 {
+		err = h.setCursorPosition(COORD{0, 0}, info.Size)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
