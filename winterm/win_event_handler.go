@@ -3,16 +3,27 @@
 package winterm
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"strconv"
+
+	log "github.com/Sirupsen/logrus"
+	. "github.com/gabrielhartmann/ansiterm"
 )
 
 type WindowsAnsiEventHandler struct {
-	fd uintptr
+	fd        uintptr
+	infoReset *CONSOLE_SCREEN_BUFFER_INFO
 }
 
-func CreateWinEventHandler(fileDesc uintptr) *WindowsAnsiEventHandler {
-	return &WindowsAnsiEventHandler{fd: fileDesc}
+func CreateWinEventHandler(fd uintptr) *WindowsAnsiEventHandler {
+	infoReset, err := GetConsoleScreenBufferInfo(fd)
+	if err != nil {
+		return nil
+	}
+
+	return &WindowsAnsiEventHandler{
+		fd:        fd,
+		infoReset: infoReset,
+	}
 }
 
 func (h *WindowsAnsiEventHandler) Print(b byte) error {
@@ -179,6 +190,31 @@ func (h *WindowsAnsiEventHandler) SGR(params []int) error {
 	// 	log.Infof("SGR: [%v]", strings)
 	// 	strings = append(strings, strconv.Itoa(v))
 	// }
+
+	info, err := GetConsoleScreenBufferInfo(h.fd)
+	if err != nil {
+		return err
+	}
+
+	attributes := info.Attributes
+	if len(params) <= 0 {
+		attributes = h.infoReset.Attributes
+	} else {
+		for _, attr := range params {
+
+			if attr == ANSI_SGR_RESET {
+				attributes = h.infoReset.Attributes
+				continue
+			}
+
+			attributes = collectAnsiIntoWindowsAttributes(attributes, h.infoReset.Attributes, SHORT(attr))
+		}
+	}
+
+	err = SetConsoleTextAttribute(h.fd, attributes)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
