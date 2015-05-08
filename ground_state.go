@@ -14,7 +14,11 @@ func (gs GroundState) Handle(b byte) (s State, e error) {
 	}
 
 	if sliceContains(Printables, b) {
-		parser.print()
+		return gs, parser.print()
+	}
+
+	if sliceContains(C0Control, b) {
+		return gs, parser.execute()
 	}
 
 	return gs, nil

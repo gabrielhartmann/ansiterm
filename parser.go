@@ -1,6 +1,8 @@
 package ansiterm
 
 import (
+	"errors"
+	"fmt"
 	"os"
 
 	"github.com/Sirupsen/logrus"
@@ -45,23 +47,34 @@ func CreateParser(initialState State, evtHandler AnsiEventHandler) *AnsiParser {
 	return parser
 }
 
-func (ap *AnsiParser) Parse(bytes []byte) {
-	for _, b := range bytes {
-		ap.handle(b)
+func (ap *AnsiParser) Parse(bytes []byte) (int, error) {
+	for i, b := range bytes {
+		if err := ap.handle(b); err != nil {
+			return i, err
+		}
 	}
+
+	return len(bytes), nil
 }
 
-func (ap *AnsiParser) handle(b byte) {
-	newState, _ := ap.state.Handle(b)
+func (ap *AnsiParser) handle(b byte) error {
+	newState, err := ap.state.Handle(b)
+	if err != nil {
+		return err
+	}
 
 	if newState == nil {
 		log.Warning("newState is nil")
-		return
+		return errors.New(fmt.Sprintf("New state of 'nil' is invalid."))
 	}
 
 	if newState != ap.state {
-		ap.changeState(newState)
+		if err := ap.changeState(newState); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
 func (ap *AnsiParser) changeState(newState State) error {

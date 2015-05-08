@@ -13,6 +13,8 @@ func (escState EscapeState) Handle(b byte) (s State, e error) {
 	switch b {
 	case ANSI_ESCAPE_SECONDARY:
 		return CsiEntry, nil
+	case ANSI_OSC_STRING_ENTRY:
+		return OscString, nil
 	}
 
 	return escState, nil

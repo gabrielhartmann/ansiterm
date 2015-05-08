@@ -75,8 +75,11 @@ const (
 	DEFAULT_HEIGHT   = 24
 
 	ANSI_BEL              = 0x07
+	ANSI_LINE_FEED        = 0x0A
+	ANSI_CARRIAGE_RETURN  = 0x0D
 	ANSI_ESCAPE_PRIMARY   = 0x1B
 	ANSI_ESCAPE_SECONDARY = 0x5B
+	ANSI_OSC_STRING_ENTRY = 0x5D
 	ANSI_COMMAND_FIRST    = 0x40
 	ANSI_COMMAND_LAST     = 0x7E
 	DCS_ENTRY             = 0x90
@@ -116,7 +119,7 @@ func getByteRange(start byte, end byte) []byte {
 }
 
 // C0 Control	  00-1F hex  (G0 is 041-176 octal, 21-7E hex)
-var C0Control = getByteRange(0x0, 0x1F)
+var C0Control = append(getByteRange(0x0, 0x1A), getByteRange(0x1C, 0x1F)...)
 
 // SPACE		  20+A0 hex  Always and everywhere a blank space
 // Intermediate	  20-2F hex   !"#$%&'()*+,-./

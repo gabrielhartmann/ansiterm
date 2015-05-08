@@ -9,6 +9,9 @@ func TestStateTransitions(t *testing.T) {
 	stateTransitionHelper(t, CsiEntry, Ground, Alphabetics)
 	stateTransitionHelper(t, CsiEntry, CsiParam, CsiCollectables)
 	stateTransitionHelper(t, Escape, CsiEntry, []byte{ANSI_ESCAPE_SECONDARY})
+	stateTransitionHelper(t, Escape, OscString, []byte{0x5D})
+	stateTransitionHelper(t, OscString, Ground, []byte{ANSI_BEL})
+	stateTransitionHelper(t, OscString, Ground, []byte{0x5C})
 }
 
 func TestAnyToX(t *testing.T) {
@@ -119,7 +122,16 @@ func TestClearOnStateChange(t *testing.T) {
 	clearOnStateChangeHelper(t, Ground, CsiEntry, []byte{CSI_ENTRY})
 }
 
-func TestOscStringToGround(t *testing.T) {
-	stateTransitionHelper(t, OscString, Ground, []byte{ANSI_BEL})
-	stateTransitionHelper(t, OscString, Ground, []byte{0x5C})
+func c0Helper(t *testing.T, bytes []byte, expectedState State, expectedCalls []string) {
+	parser, evtHandler := createTestParser(Ground)
+	parser.Parse(bytes)
+	validateState(t, parser.state, expectedState)
+	validateFuncCalls(t, evtHandler.FunctionCalls, expectedCalls)
+}
+
+func TestC0(t *testing.T) {
+	expectedCall := "Print([" + string(ANSI_LINE_FEED) + "])"
+	c0Helper(t, []byte{ANSI_LINE_FEED}, Ground, []string{expectedCall})
+	expectedCall = "Print([" + string(ANSI_CARRIAGE_RETURN) + "])"
+	c0Helper(t, []byte{ANSI_CARRIAGE_RETURN}, Ground, []string{expectedCall})
 }
