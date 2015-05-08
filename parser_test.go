@@ -118,3 +118,8 @@ func TestClearOnStateChange(t *testing.T) {
 	clearOnStateChangeHelper(t, Ground, Escape, []byte{ANSI_ESCAPE_PRIMARY})
 	clearOnStateChangeHelper(t, Ground, CsiEntry, []byte{CSI_ENTRY})
 }
+
+func TestOscStringToGround(t *testing.T) {
+	stateTransitionHelper(t, OscString, Ground, []byte{ANSI_BEL})
+	stateTransitionHelper(t, OscString, Ground, []byte{0x5C})
+}

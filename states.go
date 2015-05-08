@@ -84,7 +84,3 @@ type DcsEntryState struct {
 type ErrorState struct {
 	BaseState
 }
-
-type OscStringState struct {
-	BaseState
-}
