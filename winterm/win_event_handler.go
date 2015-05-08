@@ -3,6 +3,7 @@
 package winterm
 
 import (
+	"os"
 	"strconv"
 
 	log "github.com/Sirupsen/logrus"
@@ -11,10 +12,11 @@ import (
 
 type WindowsAnsiEventHandler struct {
 	fd        uintptr
+	file      *os.File
 	infoReset *CONSOLE_SCREEN_BUFFER_INFO
 }
 
-func CreateWinEventHandler(fd uintptr) *WindowsAnsiEventHandler {
+func CreateWinEventHandler(fd uintptr, file *os.File) *WindowsAnsiEventHandler {
 	infoReset, err := GetConsoleScreenBufferInfo(fd)
 	if err != nil {
 		return nil
@@ -22,12 +24,21 @@ func CreateWinEventHandler(fd uintptr) *WindowsAnsiEventHandler {
 
 	return &WindowsAnsiEventHandler{
 		fd:        fd,
+		file:      file,
 		infoReset: infoReset,
 	}
 }
 
 func (h *WindowsAnsiEventHandler) Print(b byte) error {
-	log.Infof("Print: [%v]", []string{string(b)})
+	//log.Infof("Print: [%v]", []string{string(b)})
+
+	bytes := []byte{b}
+
+	_, err := h.file.Write(bytes)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
