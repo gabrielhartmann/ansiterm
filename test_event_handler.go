@@ -25,6 +25,11 @@ func (h *TestAnsiEventHandler) Print(b byte) error {
 	return nil
 }
 
+func (h *TestAnsiEventHandler) Execute(b byte) error {
+	h.recordCall("Execute", []string{string(b)})
+	return nil
+}
+
 func (h *TestAnsiEventHandler) CUU(param int) error {
 	h.recordCall("CUU", []string{strconv.Itoa(param)})
 	return nil

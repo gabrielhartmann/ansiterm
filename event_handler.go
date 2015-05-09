@@ -4,6 +4,9 @@ type AnsiEventHandler interface {
 	// Print
 	Print(b byte) error
 
+	// Execute C0 commands
+	Execute(b byte) error
+
 	// CUrsor Up
 	CUU(int) error
 

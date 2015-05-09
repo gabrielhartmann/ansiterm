@@ -85,7 +85,7 @@ func (ap *AnsiParser) execute() error {
 	switch {
 	case ANSI_BEL <= currChar && currChar <= ANSI_CARRIAGE_RETURN:
 		log.Infof("AnsiParser::execute %#x", ap.context.currentChar)
-		if err := ap.eventHandler.Print(currChar); err != nil {
+		if err := ap.eventHandler.Execute(currChar); err != nil {
 			return err
 		}
 	}

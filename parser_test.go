@@ -130,8 +130,8 @@ func c0Helper(t *testing.T, bytes []byte, expectedState State, expectedCalls []s
 }
 
 func TestC0(t *testing.T) {
-	expectedCall := "Print([" + string(ANSI_LINE_FEED) + "])"
+	expectedCall := "Execute([" + string(ANSI_LINE_FEED) + "])"
 	c0Helper(t, []byte{ANSI_LINE_FEED}, Ground, []string{expectedCall})
-	expectedCall = "Print([" + string(ANSI_CARRIAGE_RETURN) + "])"
+	expectedCall = "Execute([" + string(ANSI_CARRIAGE_RETURN) + "])"
 	c0Helper(t, []byte{ANSI_CARRIAGE_RETURN}, Ground, []string{expectedCall})
 }
