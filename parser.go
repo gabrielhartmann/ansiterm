@@ -81,17 +81,20 @@ func (ap *AnsiParser) changeState(newState State) error {
 	log.Infof("ChangeState %s --> %s", ap.state.Name(), newState.Name())
 
 	// Exit old state
-	err := ap.state.Exit()
-	if err != nil {
+	if err := ap.state.Exit(); err != nil {
+		log.Infof("Exit state '%s' failed with : '%v'", ap.state.Name(), err)
 		return err
 	}
 
 	// Perform transition action
-	err = ap.state.Transition(newState)
+	if err := ap.state.Transition(newState); err != nil {
+		log.Infof("Transition from '%s' to '%s' failed with: '%v'", ap.state.Name(), newState.Name, err)
+		return err
+	}
 
 	// Enter new state
-	err = newState.Enter()
-	if err != nil {
+	if err := newState.Enter(); err != nil {
+		log.Infof("Enter state '%s' failed with: '%v'", newState.Name(), err)
 		return err
 	}
 

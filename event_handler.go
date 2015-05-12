@@ -51,4 +51,7 @@ type AnsiEventHandler interface {
 
 	// Pan Up
 	SD(int) error
+
+	// Set Top and Bottom Margins
+	DECSTBM(int, int) error
 }

@@ -111,3 +111,9 @@ func (h *TestAnsiEventHandler) SD(param int) error {
 	h.recordCall("SD", []string{strconv.Itoa(param)})
 	return nil
 }
+
+func (h *TestAnsiEventHandler) DECSTBM(top int, bottom int) error {
+	topS, bottomS := strconv.Itoa(top), strconv.Itoa(bottom)
+	log.Infof("DECSTBM: [%v]", []string{topS, bottomS})
+	return nil
+}

@@ -62,9 +62,14 @@ func (ap *AnsiParser) csiDispatch() error {
 		return ap.lDispatch(params)
 	case "m":
 		return ap.eventHandler.SGR(getInts(params, 1, 0))
+	case "r":
+		ints := getInts(params, 2, 1)
+		top, bottom := ints[0], ints[1]
+		return ap.eventHandler.DECSTBM(top, bottom)
+	default:
+		return errors.New(fmt.Sprintf("Unsupported CSI command: '%s', with full context:  %v", cmd, ap.context))
 	}
 
-	return errors.New(fmt.Sprintf("%v", ap.context))
 }
 
 func (ap *AnsiParser) print() error {
@@ -80,15 +85,6 @@ func (ap *AnsiParser) clear() error {
 func (ap *AnsiParser) execute() error {
 	log.Infof("AnsiParser::execute %#x", ap.context.currentChar)
 
-	currChar := ap.context.currentChar
+	return ap.eventHandler.Execute(ap.context.currentChar)
 
-	switch {
-	case ANSI_BEL <= currChar && currChar <= ANSI_CARRIAGE_RETURN:
-		log.Infof("AnsiParser::execute %#x", ap.context.currentChar)
-		if err := ap.eventHandler.Execute(currChar); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
