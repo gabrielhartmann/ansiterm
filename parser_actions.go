@@ -50,6 +50,8 @@ func (ap *AnsiParser) csiDispatch() error {
 		return ap.eventHandler.EL(param)
 	case "L":
 		return ap.eventHandler.IL(getInt(params, 1))
+	case "M":
+		return ap.eventHandler.DL(getInt(params, 1))
 	case "S":
 		return ap.eventHandler.SU(getInt(params, 1))
 	case "T":

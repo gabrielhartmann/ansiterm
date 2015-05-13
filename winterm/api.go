@@ -230,8 +230,8 @@ func GetConsoleScreenBufferInfo(handle uintptr) (*CONSOLE_SCREEN_BUFFER_INFO, er
 	return &info, nil
 }
 
-func ScrollConsoleScreenBuffer(handle uintptr, scrollRect SMALL_RECT, clipRect *SMALL_RECT, destOrigin COORD, char CHAR_INFO) error {
-	r1, r2, err := scrollConsoleScreenBufferProc.Call(handle, uintptr(unsafe.Pointer(&scrollRect)), uintptr(unsafe.Pointer(clipRect)), coordToPointer(destOrigin), uintptr(unsafe.Pointer(&char)))
+func ScrollConsoleScreenBuffer(handle uintptr, scrollRect SMALL_RECT, clipRect SMALL_RECT, destOrigin COORD, char CHAR_INFO) error {
+	r1, r2, err := scrollConsoleScreenBufferProc.Call(handle, uintptr(unsafe.Pointer(&scrollRect)), uintptr(unsafe.Pointer(&clipRect)), coordToPointer(destOrigin), uintptr(unsafe.Pointer(&char)))
 	use(scrollRect)
 	use(clipRect)
 	use(destOrigin)

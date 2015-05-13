@@ -23,6 +23,14 @@ func (h *WindowsAnsiEventHandler) scroll(param int) error {
 		Right:  rect.Right,
 	}
 
+	// Clipping region should be the original scroll region
+	clipRegion := SMALL_RECT{
+		Top:    top,
+		Bottom: bottom,
+		Left:   rect.Left,
+		Right:  rect.Right,
+	}
+
 	// Origin to which area should be copied
 	destOrigin := COORD{
 		X: rect.Left,
@@ -34,7 +42,7 @@ func (h *WindowsAnsiEventHandler) scroll(param int) error {
 		Attributes:  0,
 	}
 
-	if err := ScrollConsoleScreenBuffer(h.fd, scrollRect, nil, destOrigin, char); err != nil {
+	if err := ScrollConsoleScreenBuffer(h.fd, scrollRect, clipRegion, destOrigin, char); err != nil {
 		return err
 	}
 

@@ -238,8 +238,17 @@ func (h *WindowsAnsiEventHandler) EL(param int) error {
 }
 
 func (h *WindowsAnsiEventHandler) IL(param int) error {
-	log.Infof("IL: [%v]", []string{strconv.Itoa(param)})
-	return h.SU(param)
+	log.Infof("IL: [%v]", strconv.Itoa(param))
+	if err := h.SU(param); err != nil {
+		return err
+	}
+
+	return h.EL(2)
+}
+
+func (h *WindowsAnsiEventHandler) DL(param int) error {
+	log.Infof("DL: [%v]", strconv.Itoa(param))
+	return h.SD(param)
 }
 
 func (h *WindowsAnsiEventHandler) SGR(params []int) error {
@@ -280,10 +289,12 @@ func (h *WindowsAnsiEventHandler) SGR(params []int) error {
 }
 
 func (h *WindowsAnsiEventHandler) SU(param int) error {
+	log.Infof("SU: [%v]", []string{strconv.Itoa(param)})
 	return h.scroll(-param)
 }
 
 func (h *WindowsAnsiEventHandler) SD(param int) error {
+	log.Infof("SD: [%v]", []string{strconv.Itoa(param)})
 	return h.scroll(param)
 }
 
