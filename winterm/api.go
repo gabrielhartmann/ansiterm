@@ -39,6 +39,7 @@ var (
 	setConsoleModeProc             = kernel32DLL.NewProc("SetConsoleMode")
 	getConsoleScreenBufferInfoProc = kernel32DLL.NewProc("GetConsoleScreenBufferInfo")
 	setConsoleScreenBufferSizeProc = kernel32DLL.NewProc("SetConsoleScreenBufferSize")
+	scrollConsoleScreenBufferProc  = kernel32DLL.NewProc("ScrollConsoleScreenBufferA")
 	setConsoleTextAttributeProc    = kernel32DLL.NewProc("SetConsoleTextAttribute")
 	setConsoleWindowInfoProc       = kernel32DLL.NewProc("SetConsoleWindowInfo")
 	getCurrentConsoleFontProc      = kernel32DLL.NewProc("GetCurrentConsoleFont")
@@ -227,6 +228,15 @@ func GetConsoleScreenBufferInfo(handle uintptr) (*CONSOLE_SCREEN_BUFFER_INFO, er
 		return nil, err
 	}
 	return &info, nil
+}
+
+func ScrollConsoleScreenBuffer(handle uintptr, scrollRect SMALL_RECT, clipRect *SMALL_RECT, destOrigin COORD, char CHAR_INFO) error {
+	r1, r2, err := scrollConsoleScreenBufferProc.Call(handle, uintptr(unsafe.Pointer(&scrollRect)), uintptr(unsafe.Pointer(clipRect)), coordToPointer(destOrigin), uintptr(unsafe.Pointer(&char)))
+	use(scrollRect)
+	use(clipRect)
+	use(destOrigin)
+	use(char)
+	return checkError(r1, r2, err)
 }
 
 // SetConsoleScreenBufferSize sets the size of the console screen buffer.

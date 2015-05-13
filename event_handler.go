@@ -43,6 +43,9 @@ type AnsiEventHandler interface {
 	// Erase in Line
 	EL(int) error
 
+	// Insert Line
+	IL(int) error
+
 	// Set Graphics Rendition
 	SGR([]int) error
 
@@ -51,6 +54,9 @@ type AnsiEventHandler interface {
 
 	// Pan Up
 	SD(int) error
+
+	// Device Attributes
+	DA([]string) error
 
 	// Set Top and Bottom Margins
 	DECSTBM(int, int) error

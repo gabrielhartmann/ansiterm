@@ -68,9 +68,9 @@ func (h *WindowsAnsiEventHandler) Execute(b byte) error {
 			}
 
 			// Clear line
-			if err := h.CUD(1); err != nil {
-				return err
-			}
+			// if err := h.CUD(1); err != nil {
+			// 	return err
+			// }
 			if err := h.EL(0); err != nil {
 				return err
 			}
@@ -237,6 +237,11 @@ func (h *WindowsAnsiEventHandler) EL(param int) error {
 	return nil
 }
 
+func (h *WindowsAnsiEventHandler) IL(param int) error {
+	log.Infof("IL: [%v]", []string{strconv.Itoa(param)})
+	return h.SU(param)
+}
+
 func (h *WindowsAnsiEventHandler) SGR(params []int) error {
 	strings := []string{}
 	for _, v := range params {
@@ -275,24 +280,42 @@ func (h *WindowsAnsiEventHandler) SGR(params []int) error {
 }
 
 func (h *WindowsAnsiEventHandler) SU(param int) error {
-	log.Infof("SU: [%v]", []string{strconv.Itoa(param)})
-	return nil
+	return h.scroll(-param)
 }
 
 func (h *WindowsAnsiEventHandler) SD(param int) error {
-	log.Infof("SD: [%v]", []string{strconv.Itoa(param)})
+	return h.scroll(param)
+}
 
-	info, err := GetConsoleScreenBufferInfo(h.fd)
-	if err != nil {
-		return err
-	}
+func (h *WindowsAnsiEventHandler) DA(params []string) error {
+	log.Infof("DA: [%v]", params)
 
-	rect := info.Window
-	rect.Top++
-	rect.Bottom++
+	// See the site below for details of the device attributes command
+	// http://vt100.net/docs/vt220-rm/chapter4.html
 
-	if err := SetConsoleWindowInfo(h.fd, true, rect); err != nil {
-		return err
+	// First character of first parameter string is '>'
+	if params[0][0] == '>' {
+		// Secondary device attribute request:
+		// Respond with:
+		// "I am a VT220 version 1.0, no options.
+		//                    CSI     >     1     ;     1     0     ;     0     c    CR    LF
+		bytes := []byte{CSI_ENTRY, 0x3E, 0x31, 0x3B, 0x31, 0x30, 0x3B, 0x30, 0x63, 0x0D, 0x0A}
+
+		for _, b := range bytes {
+			h.Print(b)
+		}
+	} else {
+		// Primary device attribute request:
+		// Respond with:
+		// "I am a service class 2 terminal (62) with 132 columns (1),
+		// printer port (2), selective erase (6), DRCS (7), UDK (8),
+		// and I support 7-bit national replacement character sets (9)."
+		//                    CSI     ?     6     2     ;     1     ;     2     ;     6     ;     7     ;     8     ;     9     c    CR    LF
+		bytes := []byte{CSI_ENTRY, 0x3F, 0x36, 0x32, 0x3B, 0x31, 0x3B, 0x32, 0x3B, 0x36, 0x3B, 0x37, 0x3B, 0x38, 0x3B, 0x39, 0x63, 0x0D, 0x0A}
+
+		for _, b := range bytes {
+			h.Print(b)
+		}
 	}
 
 	return nil

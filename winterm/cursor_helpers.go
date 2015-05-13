@@ -2,6 +2,10 @@
 
 package winterm
 
+import (
+	"github.com/Sirupsen/logrus"
+)
+
 const (
 	Horizontal = iota
 	Vertical
@@ -31,7 +35,7 @@ func (h *WindowsAnsiEventHandler) moveCursor(moveMode int, param int) error {
 	position := info.CursorPosition
 	switch moveMode {
 	case Horizontal:
-		position.X = AddInRange(position.Y, SHORT(param), info.Window.Top, info.Window.Bottom)
+		position.X = AddInRange(position.X, SHORT(param), info.Window.Left, info.Window.Right)
 	case Vertical:
 		position.Y = AddInRange(position.Y, SHORT(param), info.Window.Top, info.Window.Bottom)
 	}
@@ -39,6 +43,8 @@ func (h *WindowsAnsiEventHandler) moveCursor(moveMode int, param int) error {
 	if err = h.setCursorPosition(position, info.Size); err != nil {
 		return err
 	}
+
+	logrus.Infof("Cursor position set: (%d, %d)", position.X, position.Y)
 
 	return nil
 }

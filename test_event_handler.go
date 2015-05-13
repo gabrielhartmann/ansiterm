@@ -92,6 +92,11 @@ func (h *TestAnsiEventHandler) EL(param int) error {
 	return nil
 }
 
+func (h *TestAnsiEventHandler) IL(param int) error {
+	h.recordCall("IL", []string{strconv.Itoa(param)})
+	return nil
+}
+
 func (h *TestAnsiEventHandler) SGR(params []int) error {
 	strings := []string{}
 	for _, v := range params {
@@ -109,6 +114,11 @@ func (h *TestAnsiEventHandler) SU(param int) error {
 
 func (h *TestAnsiEventHandler) SD(param int) error {
 	h.recordCall("SD", []string{strconv.Itoa(param)})
+	return nil
+}
+
+func (h *TestAnsiEventHandler) DA(params []string) error {
+	h.recordCall("DA", params)
 	return nil
 }
 
